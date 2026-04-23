@@ -8,21 +8,20 @@
 
 Designed for Hyprland users and developers who live in the terminal, mix languages, and want to keep their hands off the keyboard.
 
-```
-+-----------+      +----------------------------------------+
-|  Keybind  |----->|  voice daemon                          |
-+-----------+      |                                        |
-                   |  Record (sounddevice, 48kHz)           |
-                   |      |                                 |
-                   |      v  energy-based VAD               |
-                   |  2s silence -- utterance complete      |
-                   |      |                                 |
-                   |      v  resample to 16kHz              |
-                   |  Transcribe (faster-whisper, GPU)      |
-                   |      |                                 |
-                   |      v                                 |
-                   |  wtype --> focused window              |
-                   +----------------------------------------+
+```mermaid
+flowchart TD
+    A["🎙️ Keybind toggle"] --> B["Record audio\n(sounddevice, 48kHz)"]
+    B --> C{"Energy-based\nVAD"}
+    C -->|"2s silence"| D["Resample\n48kHz → 16kHz"]
+    D --> E["Transcribe\n(faster-whisper, GPU)"]
+    E --> F["Type into focused window\n(wtype)"]
+    F -->|"continue listening"| C
+    C -->|"6s silence"| G["Auto-press Enter"]
+    G -->|"continue listening"| C
+
+    style A fill:#4a9eff,stroke:#2d7ad4,color:#fff
+    style E fill:#ff6b6b,stroke:#d44a4a,color:#fff
+    style F fill:#51cf66,stroke:#37a34d,color:#fff
 ```
 
 ## Features

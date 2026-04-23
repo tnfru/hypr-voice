@@ -9,20 +9,20 @@
 Designed for Hyprland users and developers who live in the terminal, mix languages, and want to keep their hands off the keyboard.
 
 ```
-  ╭──────────╮      ╭─────────────────────────────────────────────╮
-  │ Keybind  │─────▶│              voice daemon                   │
-  ╰──────────╯      │                                             │
-                    │   Record (sounddevice, 48kHz)               │
-                    │       │                                     │
-                    │       ▼  energy-based VAD                   │
-                    │   2s silence ── utterance complete           │
-                    │       │                                     │
-                    │       ▼  resample to 16kHz                  │
-                    │   Transcribe (faster-whisper, GPU)          │
-                    │       │                                     │
-                    │       ▼                                     │
-                    │   wtype ──▶ focused window                  │
-                    ╰─────────────────────────────────────────────╯
++-----------+      +----------------------------------------+
+|  Keybind  |----->|  voice daemon                          |
++-----------+      |                                        |
+                   |  Record (sounddevice, 48kHz)           |
+                   |      |                                 |
+                   |      v  energy-based VAD               |
+                   |  2s silence -- utterance complete      |
+                   |      |                                 |
+                   |      v  resample to 16kHz              |
+                   |  Transcribe (faster-whisper, GPU)      |
+                   |      |                                 |
+                   |      v                                 |
+                   |  wtype --> focused window              |
+                   +----------------------------------------+
 ```
 
 ## Features

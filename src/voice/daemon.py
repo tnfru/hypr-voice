@@ -132,7 +132,7 @@ class VoiceDaemon:
         self._state = "idle"
         self._pending_submit = False
         if self._buffer:
-            log.info("Discarded buffer: %s", " ".join(self._buffer))
+            log.info("Discarded buffer (%d utterances)", len(self._buffer))
         self._buffer.clear()
         self._notify("Voice", "Stopped", icon="audio-input-microphone", timeout=1500)
         return "ok stopped"
@@ -150,7 +150,7 @@ class VoiceDaemon:
                         self._exec_voice_command(command, text)
                         return
                     self._buffer.append(text)
-                    log.info("Buffered: %s", text)
+                    log.info("Buffered utterance (%d chars)", len(text))
                     self._notify(
                         "Voice",
                         " ".join(self._buffer),
@@ -161,7 +161,7 @@ class VoiceDaemon:
                     # Direct mode: type immediately
                     self._inject_text(text)
                     self._pending_submit = True
-                    log.info("Typed: %s", text)
+                    log.info("Typed %d chars", len(text))
 
         # Auto-Enter after extended silence (direct mode only)
         if not VOICE_COMMANDS_ENABLED and self._pending_submit:
@@ -186,7 +186,7 @@ class VoiceDaemon:
                     text = " ".join(self._buffer)
                     self._inject_text(text)
                     self._buffer.clear()
-                    log.info("Submitted buffer: %s", text)
+                    log.info("Submitted buffer (%d chars)", len(text))
                 self._inject_key("Return")
             case "newline":
                 self._inject_key("Return")  # in most contexts newline = Return

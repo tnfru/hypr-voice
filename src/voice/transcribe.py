@@ -82,9 +82,9 @@ class Transcriber:
 
         text = " ".join(seg.text for seg in segments).strip()
         log.info(
-            "Transcribed [%s %.0f%%]: %s",
+            "Transcribed [%s %.0f%%] %d chars",
             info.language,
             info.language_probability * 100,
-            text,
+            len(text),
         )
         return text

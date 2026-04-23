@@ -60,7 +60,10 @@ class VoiceDaemon:
                 conn, _ = self._sock.accept()
             except TimeoutError:
                 if self._state == "listening":
-                    self._process_voice()
+                    try:
+                        self._process_voice()
+                    except Exception:
+                        log.exception("Error in voice processing")
                 continue
             except OSError:
                 break
@@ -147,7 +150,7 @@ class VoiceDaemon:
                     # Buffer mode: check for command, otherwise buffer
                     command = self._match_voice_command(text)
                     if command:
-                        self._exec_voice_command(command, text)
+                        self._exec_voice_command(command)
                         return
                     self._buffer.append(text)
                     log.info("Buffered utterance (%d chars)", len(text))
@@ -177,9 +180,9 @@ class VoiceDaemon:
         normalized = text.strip().lower().rstrip(".,!?")
         return VOICE_COMMANDS.get(normalized)
 
-    def _exec_voice_command(self, command: str, raw: str) -> None:
+    def _exec_voice_command(self, command: str) -> None:
         """Execute a matched voice command."""
-        log.info("Voice command: %r → %s", raw, command)
+        log.info("Voice command: %s", command)
         match command:
             case "submit":
                 if self._buffer:
@@ -245,15 +248,16 @@ class VoiceDaemon:
         """Remove a stale socket file, or exit if another daemon is running."""
         if not Path(SOCKET_PATH).exists():
             return
+        test = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         try:
-            test = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             test.connect(SOCKET_PATH)
-            test.close()
             log.error("Another daemon is already running on %s", SOCKET_PATH)
             sys.exit(1)
-        except ConnectionRefusedError:
+        except OSError:
             log.info("Removing stale socket %s", SOCKET_PATH)
             Path(SOCKET_PATH).unlink()
+        finally:
+            test.close()
 
     def _write_pid(self) -> None:
         """Write the current PID to the pid file."""
@@ -273,7 +277,6 @@ class VoiceDaemon:
                 self._sock.close()
 
     def _signal_handler(self, signum: int, frame: object) -> None:  # noqa: ARG002
-        """Handle SIGTERM/SIGINT by cleaning up and exiting."""
+        """Handle SIGTERM/SIGINT by exiting (atexit handles cleanup)."""
         log.info("Received signal %d", signum)
-        self._cleanup()
         sys.exit(0)

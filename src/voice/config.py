@@ -37,19 +37,19 @@ INPUT_DEVICE = "fifine"  # substring match against sounddevice device names
 # the speaker's style work better than word lists. Language auto-detected so both
 # full-German and full-English input work; the initial_prompt biases toward your
 # dominant language while still allowing the other when spoken.
-LANGUAGE = None
+LANGUAGE = "de"
 
 # Customize this to match how you actually speak. Include project names, tech terms,
 # and any vocabulary Whisper might struggle with. Sentences work better than word lists.
 INITIAL_PROMPT = (
-    "Okay, I'm going to do a git commit and push that to the PR. "
-    "I've already merged the branch, the rebase worked fine. "
-    "I'm refactoring the API endpoints in the backend with Python and FastAPI. "
-    "The deploy runs through the CI/CD pipeline on Kubernetes. "
-    "In Claude Code I can run that with a subagent in parallel. "
-    "The frontend is TypeScript, the backend stays Python. "
-    "I'm starting the Docker container and checking the logs in Kitty with tmux. "
-    "When I'm done, I just say Over."
+    "Okay, ich mache jetzt einen git commit und push das dann zum PR. "
+    "Den Branch habe ich schon gemerged, der Rebase hat funktioniert. "
+    "Ich refactore gerade die API-Endpoints im Backend mit Python und FastAPI. "
+    "Der Deploy auf Kubernetes läuft über die CI/CD-Pipeline. "
+    "In Claude Code kann ich das mit einem Subagent parallel laufen lassen. "
+    "Das Frontend baue ich in TypeScript, das Backend bleibt Python. "
+    "Ich starte den Docker-Container und checke die Logs in Kitty mit tmux. "
+    "Wenn ich fertig bin, sage ich einfach Over."
 )
 
 # Project-specific terms that faster-whisper should prefer (applied per-segment).

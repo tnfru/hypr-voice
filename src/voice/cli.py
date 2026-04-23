@@ -22,18 +22,17 @@ def _send_command(cmd: str) -> str:
     Returns:
         The decoded response from the daemon.
     """
+    sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     try:
-        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         sock.connect(SOCKET_PATH)
         sock.sendall(cmd.encode() + b"\n")
         sock.settimeout(30.0)
-        resp = sock.recv(4096).decode().strip()
-        sock.close()
+        return sock.recv(4096).decode().strip()
     except (ConnectionRefusedError, FileNotFoundError):
         print("Daemon not running", file=sys.stderr)  # noqa: T201
         sys.exit(1)
-    else:
-        return resp
+    finally:
+        sock.close()
 
 
 def _cmd_daemon(args: argparse.Namespace) -> None:

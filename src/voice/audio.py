@@ -91,6 +91,7 @@ class AudioRecorder:
             time_info: object,  # noqa: ARG001
             status: sd.CallbackFlags,
         ) -> None:
+            """Process incoming audio chunk and detect speech boundaries."""
             if status:
                 log.warning("Audio callback status: %s", status)
 
@@ -141,9 +142,10 @@ class AudioRecorder:
 
     def stop(self) -> None:
         """Stop and close the audio stream."""
-        if not self.is_recording:
+        if self._stream is None:
             return
-        self._stream.stop()
+        if self._stream.active:
+            self._stream.stop()
         self._stream.close()
         self._stream = None
         with self._lock:

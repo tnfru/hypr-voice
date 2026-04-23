@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 
-import numpy as np  # noqa: TC002
+import voice.config as cfg
 
-import voice.config as cfg  # must be imported first to set LD_LIBRARY_PATH
+if TYPE_CHECKING:
+    import numpy as np
+    from faster_whisper import WhisperModel
 
 log = logging.getLogger(__name__)
 
@@ -19,7 +22,7 @@ class Transcriber:
 
     def __init__(self) -> None:
         """Initialize the transcriber with no model loaded."""
-        self._model: WhisperModel | None = None  # type: ignore[name-defined]  # noqa: F821
+        self._model: WhisperModel | None = None
 
     def load(self) -> None:
         """Load the whisper model, falling back to CPU on GPU failure."""
